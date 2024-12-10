@@ -1,0 +1,47 @@
+server:
+  port: ${NEF_PORT:8081}
+  http2:
+    enabled: true
+logging:
+  file:
+    name: spring.log
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+pcf:
+  basepath: ${PCF_BASEPATH}
+  notifuri: http://${NEF_HOST:localhost}:${NEF_PORT:8081}/notifications
+  # A string used to indicate the features supported by an API that is used as defined in clause 6.6 in 3GPP TS 29.500. 
+  # The string shall contain a bitmask indicating supported features in hexadecimal representation Each character in the string shall take a value of "0" to "9", "a" to "f" or "A" to "F" and shall represent the support of 4 features as described in table 5.2.2-3.
+  # The most significant character representing the highest-numbered features shall appear first in the string, and the character representing features 1 to 4 shall appear last in the string. The list of features and their numbering (starting with 1) are defined separately for each API.
+  # If the string contains a lower number of characters than there are defined features for an API, all features that would be represented by characters that are not present in the string are not supported
+  #
+  # It looks like the features supported by Open5gs are the following. 
+  # OGS_SBI_NPCF_POLICYAUTHORIZATION_IMS_SBI -> 5
+  # OGS_SBI_NPCF_POLICYAUTHORIZATION_SPONSORED_CONNECTIVITY -> 2
+  # The bitmask: 00010010 --> 0x12
+  suppfeat: "12"
+  qos:
+    references:
+      # Undoing the mapping done by the Deutsche Telekom function
+      qod_1: qos-e
+      qod_2: qos-s
+      qod_3: qos-m
+      qod_4: qos-l
+    qosE:
+      marBwDl: 120000000
+      marBwUl: 120000000
+      mediaType: CONTROL
+    qosS:
+      marBwDl: 20000000
+      marBwUl: 20000000
+      mediaType: AUDIO
+    qosM:
+      marBwDl: 40000000
+      marBwUl: 40000000
+      mediaType: VIDEO
+    qosL:
+      marBwDl: 80000000
+      marBwUl: 80000000
+      mediaType: VIDEO

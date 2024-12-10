@@ -1,0 +1,7 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.project.sourcePaths": [
+        "api/src/main/java",
+        "api/target/generated-sources/openapi/src/main/java"
+    ]
+}
