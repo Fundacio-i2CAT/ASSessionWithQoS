@@ -61,6 +61,12 @@ services:
     environment:
       NEF_HOST: <NEF_HOST>
       TF_HOST: <TF_HOST>
+    entrypoint: >
+      java --add-opens=java.base/java.net=ALL-UNNAMED 
+      -jar -Djava.security.egd=file:/dev/./urandom 
+      -Dlogging.file.path=/log 
+      -Dspring.profiles.active=local 
+      app.jar
 
   nef:
     image: assession-with-qos:0.1.0
