@@ -6,7 +6,7 @@
   <groupId>net.i2cat</groupId>
   <artifactId>assession-with-qos</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <name>scef</name>
 
   <parent>
