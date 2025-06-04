@@ -14,6 +14,7 @@ import autogen.pcf.api.ApplicationSessionsCollectionApi;
 import autogen.pcf.api.IndividualApplicationSessionContextDocumentApi;
 import autogen.pcf.api.model.AppSessionContext;
 import autogen.pcf.api.model.AppSessionContextReqData;
+import autogen.pcf.api.model.EventsSubscReqData;
 import autogen.pcf.api.model.FlowStatus;
 import autogen.pcf.api.model.FlowUsage;
 import autogen.pcf.api.model.MediaComponent;
@@ -93,7 +94,7 @@ public class PcfClient {
 
         // It only supports 3 types of media: Audio (QCI 1), Video (QCI 2) y Control (QCI 5)
         // Based on the QoS reference we will set the bandwidth required and the media type
-        switch (qoSConfiguration.getReferences().get(asSession.getQosReference())) {
+        switch (qoSConfiguration.getReferences().getOrDefault(asSession.getQosReference(), asSession.getQosReference())) {
             case "qos-e":
                 mc.setMarBwDl(qoSConfiguration.getQosE().get("marBwDl"));
                 mc.setMarBwUl(qoSConfiguration.getQosE().get("marBwUl"));
@@ -124,6 +125,20 @@ public class PcfClient {
         Map<String,MediaComponent> mcList = new HashMap<>();
         mcList.put("1",mc);
         request.setMedComponents(mcList);
+
+        // Add Usage threshold
+        EventsSubscReqData evSubsc = new EventsSubscReqData();
+        // Convert SCEF UsageThreshold to PCF UsageThreshold
+        autogen.scef.api.model.UsageThreshold scefUsageThreshold = asSession.getUsageThreshold();
+        autogen.pcf.api.model.UsageThreshold pcfUsageThreshold = new autogen.pcf.api.model.UsageThreshold();
+        if (scefUsageThreshold != null) {
+            pcfUsageThreshold.setDuration(scefUsageThreshold.getDuration());
+            pcfUsageThreshold.setTotalVolume(scefUsageThreshold.getTotalVolume());
+            pcfUsageThreshold.setDownlinkVolume(scefUsageThreshold.getDownlinkVolume());
+            pcfUsageThreshold.setUplinkVolume(scefUsageThreshold.getUplinkVolume());
+        }
+        evSubsc.setUsgThres(pcfUsageThreshold);
+        request.setEvSubsc(evSubsc);
 
         // Context
         AppSessionContext context = new AppSessionContext();
